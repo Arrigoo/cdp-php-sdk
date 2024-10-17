@@ -1,5 +1,5 @@
 {
-    "name": "arrigoo/arrigoo-cdp-sdk",
+    "name": "arrigoo/cdp-php-sdk",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "8.0.x-dev"
