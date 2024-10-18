@@ -41,6 +41,19 @@ abstract class ClientBase
         $this->keyExpiresAt = $rBody['keyExpiresAt'];
     }
 
+    /**
+     * Retrieve the API secret to renew the API key.
+     */
+    public function getSecret(): string
+    {
+        return $this->apiSecret;
+    }
+
+    public function getSecretExpireTime(): int
+    {
+        return time() + $this->keyExpiresAt;
+    }
+
     protected function getHeadersWithKey(): array
     {
         $headers = $this->getHeaders();
