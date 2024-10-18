@@ -11,6 +11,16 @@ class Client extends ClientBase
         ]);
         return $response;
     }
+
+
+    public function getProperties(): array
+    {
+        $response = $this->get('property', [
+            'headers' => $this->getHeaders(),
+        ]);
+        return $response;
+    }
+
     public static function create(
         string $apiUrl,
         string $user,
