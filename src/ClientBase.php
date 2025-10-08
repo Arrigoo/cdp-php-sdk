@@ -17,7 +17,6 @@ abstract class ClientBase
     )
     {
         $this->client = self::getGuzzleClient($apiUrl);
-        $this->keyExpiresAt = time() + $this->keyExpiresAt;
     }
 
     protected function get(string $path): array
