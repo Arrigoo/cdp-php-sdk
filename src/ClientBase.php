@@ -13,7 +13,7 @@ abstract class ClientBase
         protected string $apiSecret,
         protected string $apiUrl,
         protected string $apiKey = '',
-        protected int $keyExpiresAt = 60,
+        protected string $keyExpiresAt = '',
     )
     {
         $this->client = self::getGuzzleClient($apiUrl);
@@ -22,7 +22,7 @@ abstract class ClientBase
 
     protected function get(string $path): array
     {
-        $response = $this->client->get($path, [
+        $response = $this->client->get(self::API_VERSION . '/' . $path, [
             'headers' => $this->getHeadersWithKey(),
         ]);
         return json_decode($response->getBody()->getContents(), true);
@@ -37,8 +37,8 @@ abstract class ClientBase
             'headers' => $headers,
         ]);
         $rBody = json_decode($response->getBody()->getContents(), true);
-        $this->apiKey = $rBody['apiKey'];
-        $this->keyExpiresAt = $rBody['keyExpiresAt'];
+        $this->apiKey = $rBody['access_token'];
+        $this->keyExpiresAt = $rBody['expiry'];
     }
 
     /**
@@ -57,7 +57,7 @@ abstract class ClientBase
     protected function getHeadersWithKey(): array
     {
         $headers = $this->getHeaders();
-        $headers['X-Api-Key'] = $this->apiKey;
+        $headers['Authorization'] = 'Bearer ' . $this->apiKey;
         return $headers;
     }
 
@@ -71,7 +71,7 @@ abstract class ClientBase
 
     /**
      * Get a new instance of the Guzzle client.
-     * 
+     *
      * @param string $apiUrl
      * @return GuzzleClient
      */
@@ -84,7 +84,7 @@ abstract class ClientBase
 
     /**
      * Factory method to create a new instance of the client.
-     * 
+     *
      * @param string $apiUrl
      * @param string $user
      * @param string $password
@@ -97,10 +97,10 @@ abstract class ClientBase
     ): array
     {
         $gClient = self::getGuzzleClient($apiUrl);
-        $response = $gClient->post('security/auth', [
+        $response = $gClient->post('auth/api', [
             'json' => [
-                'email' => $user,
-                'password' => $password,
+                'key' => $user,
+                'secret' => $password,
             ],
         ]);
         $rBody = json_decode($response->getBody()->getContents(), true);

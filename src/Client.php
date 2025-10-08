@@ -29,10 +29,10 @@ class Client extends ClientBase
     {
         $rBody = parent::authInit($apiUrl, $user, $password);
         return new self(
-            $rBody['refreshToken'], 
-            $apiUrl, 
-            $rBody['token'],
-            $rBody['expire'],
+            $rBody['refresh_token'],
+            $apiUrl,
+            $rBody['access_token'],
+            $rBody['expiry'],
         );
     }
 }
